@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FazziCLAYLibs">
+    <output-path>$PROJECT_DIR$/out/artifacts/FazziCLAYLibs</output-path>
+    <root id="archive" name="FazziCLAYLibs.jar">
+      <element id="module-output" name="FazziCLAYLibs" />
+    </root>
+  </artifact>
+</component>

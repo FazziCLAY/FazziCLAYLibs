@@ -34,6 +34,13 @@ public class FileUtils {
         }
     }
 
+    public static String read(String path, String defaultValue) {
+        String content = read(path);
+        if (content != null && content.equals("")) {
+            return defaultValue;
+        }
+        return content;
+    }
 
     public static String read(String path) {
         try {

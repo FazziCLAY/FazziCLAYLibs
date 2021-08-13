@@ -1,7 +1,7 @@
 package ru.fazziclay.fazziclaylibs.util;
 
 public class ExceptionUtils {
-    public static String getStackTrace(Exception exception) {
+    public static String getStackTrace(Throwable exception) {
         StringBuilder stackTrace = new StringBuilder();
         int i = 0;
         for (StackTraceElement stackTraceElement : exception.getStackTrace()) {

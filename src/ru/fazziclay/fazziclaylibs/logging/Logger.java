@@ -111,7 +111,7 @@ public abstract class Logger {
     public void log(String message) {raw("LOG", message);}
     public void error(String message) {raw("ERROR", message);}
     public void errorDescription(String message) {raw("ERROR_DESCRIPTION", message); }
-    public void exception(Exception exception) {
+    public void exception(Throwable exception) {
         raw("Exception", exception.toString() + "\n-------------- StackTrace --------------\n" + ExceptionUtils.getStackTrace(exception) + "-------------- StackTrace end --------------");
     }
     public void function() {raw("FUNCTION_CALLED", "Called!");}

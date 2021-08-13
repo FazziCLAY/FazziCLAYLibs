@@ -10,7 +10,17 @@ public abstract class Logger {
         return "dd.MM HH:mm:ss:SSS";
     }
 
-    public String getLogFormat(String time, String mainClass, int mainLine, String mainMethod, String mainLambda, String fromClass, String fromMethod, int fromLine, String logTag, String logMessage) {
+    public String getTime(String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(new Date());
+    }
+
+    @Deprecated
+    public String getDate(String format) {
+        return getTime(format);
+    }
+
+    public String getLogFormat(String time, String logTag, String logMessage) {
         return String.format("[%s (%s:%s %s) -> (%s:%s %s) %s] %s",
                 time,
                 fromClass,
@@ -21,11 +31,6 @@ public abstract class Logger {
                 mainMethod,
                 logTag,
                 logMessage);
-    }
-
-    public String getDate(String timeFormat) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
-        return dateFormat.format(new Date());
     }
 
     /**
@@ -41,11 +46,10 @@ public abstract class Logger {
 
     protected String mainClass = null;
     protected String mainMethod = null;
-    int mainLine = 0;
-    protected String mainLambda = null;
-    String fromClass = null;
-    String fromMethod = null;
-    int fromLine = 0;
+    protected int mainLine = 0;
+    protected String fromClass = null;
+    protected String fromMethod = null;
+    protected int fromLine = 0;
 
     public Logger() {
         init();
@@ -57,21 +61,7 @@ public abstract class Logger {
         function(firstMessage);
     }
 
-    public Logger(Class lambda) {
-        this.mainLambda = lambda.getSimpleName();
-
-        init();
-        function();
-    }
-
-    public Logger(Class lambda, String firstMessage) {
-        this.mainLambda = lambda.getSimpleName();
-
-        init();
-        function(firstMessage);
-    }
-
-    public String getClassFromPath(String path) {
+    protected String getClassFromPath(String path) {
         String[] fromPath = path.split("\\.");
         return fromPath[fromPath.length-1];
     }
@@ -95,7 +85,7 @@ public abstract class Logger {
     }
 
     public void raw(String tag, String message) {
-        printLog(getLogFormat(getDate(getTimeFormat()), mainClass, mainLine, mainMethod, mainLambda, fromClass, fromMethod, fromLine, tag, message));
+        printLog(getLogFormat(getDate(getTimeFormat()), tag, message));
     }
 
     public void printLog(String message) {
@@ -110,9 +100,13 @@ public abstract class Logger {
     public void info(String message) {raw("INFO", message);}
     public void log(String message) {raw("LOG", message);}
     public void error(String message) {raw("ERROR", message);}
+    public void error(Throwable throwable) {
+        raw("ERROR", throwable.toString() + "'\n-------------- StackTrace --------------\n" + ExceptionUtils.getStackTrace(throwable) + "-------------- StackTrace end --------------");
+    }
     public void errorDescription(String message) {raw("ERROR_DESCRIPTION", message); }
-    public void exception(Throwable exception) {
-        raw("Exception", exception.toString() + "\n-------------- StackTrace --------------\n" + ExceptionUtils.getStackTrace(exception) + "-------------- StackTrace end --------------");
+    @Deprecated
+    public void exception(Throwable throwable) {
+        error(throwable);
     }
     public void function() {raw("FUNCTION_CALLED", "Called!");}
     public void function(String firstMessage) {raw("FUNCTION_CALLED", firstMessage);}

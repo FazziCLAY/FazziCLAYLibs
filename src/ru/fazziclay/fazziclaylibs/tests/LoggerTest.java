@@ -34,11 +34,6 @@ public class LoggerTest {
 
     }
 
-    @Override
-    public String toString() {
-        return "hello!!!!!!!!!";
-    }
-
     public static class TestLogger extends Logger {
         @Override
         public int getNumberInheriting() {

@@ -19,8 +19,9 @@ public class ByteUtils {
 
 
     public static byte[] getBytes(short value) {
-        ByteBuffer buffer = ByteBuffer.allocate(2);
-        buffer.putShort(value);
-        return buffer.array();
+        return new byte[]{(byte)(value & 0x00FF),(byte)((value & 0xFF00)>>8)};
+        //ByteBuffer buffer = ByteBuffer.allocate(2);
+        //buffer.putShort(value);
+        //return buffer.array();
     }
 }

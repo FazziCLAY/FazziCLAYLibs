@@ -1,5 +1,6 @@
 package ru.fazziclay.fazziclaylibs;
 
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 public class NumberUtils {
@@ -12,4 +13,5 @@ public class NumberUtils {
     public static String intToFixedLengthString(int number, int fixedLength) {
         return String.format("%0"+fixedLength+"d", number);
     }
+
 }

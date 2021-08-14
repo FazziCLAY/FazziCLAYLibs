@@ -16,4 +16,11 @@ public class ByteUtils {
         bb.put(byte2);
         return bb.getShort(0);
     }
+
+
+    public static byte[] getBytes(short value) {
+        ByteBuffer buffer = ByteBuffer.allocate(2);
+        buffer.putShort(value);
+        return buffer.array();
+    }
 }

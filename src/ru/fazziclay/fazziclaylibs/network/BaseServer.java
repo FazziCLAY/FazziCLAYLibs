@@ -35,7 +35,6 @@ public abstract class BaseServer extends Thread {
         return serverSocket.isClosed();
     }
 
-    public BaseServer() {}
     public BaseServer(int port, int soTimeOut, int backlog) {
         this.port = port;
         this.soTimeOut = soTimeOut;

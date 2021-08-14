@@ -34,20 +34,5 @@ public class LoggerTest {
 
     }
 
-    public static class TestLogger extends Logger {
-        @Override
-        public int getNumberInheriting() {
-            return 1;
-        }
 
-        @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public boolean isCleared() {
-            return false;
-        }
-    }
 }

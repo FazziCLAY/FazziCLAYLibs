@@ -15,7 +15,6 @@ public class BaseClient extends Thread {
     protected BufferedReader inputStream;
     protected PrintWriter outputStream;
 
-    public BaseClient() {}
     public BaseClient(String host, int port, int soTimeOut, BaseConnectionHandler connectionHandler) {
         this.host = host;
         this.port = port;

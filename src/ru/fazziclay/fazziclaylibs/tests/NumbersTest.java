@@ -25,9 +25,7 @@ public class NumbersTest {
             }
         }
 
-        if (true) {
-            int countOfFailed = 0;
-
+        if (false) {
             byte b1 = Byte.MIN_VALUE;
             byte b2 = Byte.MIN_VALUE;
 
@@ -47,6 +45,14 @@ public class NumbersTest {
             }
 
             //System.out.println("countOfFailed="+countOfFailed);
+        }
+
+        if (true) {
+            byte b1 = 0;
+            byte b2 = 1;
+
+            short s1 = ByteUtils.getShort(b1, b2);
+            System.out.println(s1);
         }
     }
 }

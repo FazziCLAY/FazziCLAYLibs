@@ -10,6 +10,8 @@ public abstract class Server extends Thread {
     ServerSocket serverSocket;
 
     int port;
+    int soTimeOut;
+    int backlog;
     ConnectionHandler connectionHandler;
     List<Client> connectionList;
 
@@ -30,16 +32,20 @@ public abstract class Server extends Thread {
     }
 
     public abstract void onError(IOException exception);
-    public abstract void onStarted();
+    public abstract void onPreStarted();
+    public abstract void onStarted(int port);
     public abstract void onPreClosed();
+    public abstract void onClosed();
     public boolean isClosed() {
         return serverSocket.isClosed();
     }
 
-    public Server(int port, ConnectionHandler connectionHandler) {
+    public Server(int port, ConnectionHandler connectionHandler, int soTimeOut, int backlog) {
         this.port = port;
         this.connectionHandler = connectionHandler;
         this.connectionList = new ArrayList<>();
+        this.soTimeOut = soTimeOut;
+        this.backlog = backlog;
     }
 
     public void close() {
@@ -47,13 +53,16 @@ public abstract class Server extends Thread {
         try {
             serverSocket.close();
         } catch (IOException ignored) {}
+        onClosed();
     }
 
     @Override
     public void run() {
+        onPreStarted();
         try {
-            serverSocket = new ServerSocket(port);
-            onStarted();
+            serverSocket = new ServerSocket(port, backlog);
+            serverSocket.setSoTimeout(soTimeOut);
+            onStarted(serverSocket.getLocalPort());
         } catch (IOException e) {
             onError(e);
         }
@@ -61,7 +70,7 @@ public abstract class Server extends Thread {
         while (!serverSocket.isClosed()) {
             try {
                 Socket socket = this.serverSocket.accept();
-                Client client = new Client(socket, connectionHandler);
+                Client client = new Client(socket, this);
                 client.start();
                 connectionList.add(client);
 

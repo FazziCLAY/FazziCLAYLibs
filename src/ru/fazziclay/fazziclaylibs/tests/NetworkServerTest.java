@@ -18,7 +18,7 @@ public class NetworkServerTest {
 
     public static class TestServer extends Server {
         public TestServer(int port, ConnectionHandler connectionHandler) {
-            super(port, connectionHandler);
+            super(port, connectionHandler, 0, 100);
         }
 
         @Override
@@ -28,13 +28,23 @@ public class NetworkServerTest {
         }
 
         @Override
-        public void onStarted() {
+        public void onPreStarted() {
+
+        }
+
+        @Override
+        public void onStarted(int port) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
         }
 
         @Override
         public void onPreClosed() {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
+        }
+
+        @Override
+        public void onClosed() {
+
         }
     }
 
@@ -54,9 +64,19 @@ public class NetworkServerTest {
         }
 
         @Override
+        public void onPreDisconnected(Client client) {
+
+        }
+
+        @Override
         public void onConnected(Client client) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
+        }
+
+        @Override
+        public void onPreConnected(Client client) {
+
         }
 
         @Override

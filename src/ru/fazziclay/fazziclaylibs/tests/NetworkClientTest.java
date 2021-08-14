@@ -1,7 +1,7 @@
 package ru.fazziclay.fazziclaylibs.tests;
 
-import ru.fazziclay.fazziclaylibs.network.Client;
-import ru.fazziclay.fazziclaylibs.network.ConnectionHandler;
+import ru.fazziclay.fazziclaylibs.network.BaseClient;
+import ru.fazziclay.fazziclaylibs.network.BaseConnectionHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.util.List;
 
 public class NetworkClientTest {
     public static boolean isRun = true;
-    public static List<Client> clients = new ArrayList<>();
+    public static List<BaseClient> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         int i = 0;
         while (i < 10000) {
-            Client client = new Client("localhost", 4003, 0, new TestClientConnectionHandler());
+            BaseClient client = new BaseClient("localhost", 4003, 0, new TestClientConnectionHandler());
             client.start();
             clients.add(client);
             i++;
@@ -52,41 +52,41 @@ public class NetworkClientTest {
         }
     }
 
-    public static class TestClientConnectionHandler extends ConnectionHandler {
+    public static class TestClientConnectionHandler extends BaseConnectionHandler {
 
         @Override
-        public void onPacketReceive(Client client, String data) {
+        public void onPacketReceive(BaseClient client, String data) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
             logger.info("data="+data.toString());
         }
 
         @Override
-        public void onDisconnected(Client client) {
+        public void onDisconnected(BaseClient client) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
             isRun = false;
         }
 
         @Override
-        public void onPreDisconnected(Client client) {
+        public void onPreDisconnected(BaseClient client) {
 
         }
 
         @Override
-        public void onConnected(Client client) {
+        public void onConnected(BaseClient client) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
             client.send("Hello!!! myList:\n * one\\1\n * two\\\\2");
         }
 
         @Override
-        public void onPreConnected(Client client) {
+        public void onPreConnected(BaseClient client) {
 
         }
 
         @Override
-        public void onException(Client client, Exception throwable) {
+        public void onException(BaseClient client, Exception throwable) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.error(throwable);
         }

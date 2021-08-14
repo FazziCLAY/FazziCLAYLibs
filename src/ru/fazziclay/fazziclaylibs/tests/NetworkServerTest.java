@@ -1,30 +1,40 @@
 package ru.fazziclay.fazziclaylibs.tests;
 
-import ru.fazziclay.fazziclaylibs.network.Client;
-import ru.fazziclay.fazziclaylibs.network.ConnectionHandler;
-import ru.fazziclay.fazziclaylibs.network.Server;
+import ru.fazziclay.fazziclaylibs.network.BaseClient;
+import ru.fazziclay.fazziclaylibs.network.BaseConnectionHandler;
+import ru.fazziclay.fazziclaylibs.network.BaseServer;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class NetworkServerTest {
     public static void main(String[] args) throws InterruptedException {
         LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
-        TestServer server = new TestServer(4005, new TestServerConnectionHandler());
+        TestServer server = new TestServer(4005, 0, 0);
         server.start();
 
         Thread.sleep(1000);
         while (!server.isClosed());
     }
 
-    public static class TestServer extends Server {
-        public TestServer(int port, ConnectionHandler connectionHandler) {
-            super(port, connectionHandler, 0, 100);
+    public static class TestServer extends BaseServer {
+
+        @Override
+        public void close() {
+            try {
+                super.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+
+        public TestServer(int port, int soTimeOut, int backlog) {
+            super(port, soTimeOut, backlog);
         }
 
         @Override
-        public void onError(IOException exception) {
-            LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
-            logger.error(exception);
+        public void onException(Exception exception) {
+
         }
 
         @Override
@@ -38,6 +48,11 @@ public class NetworkServerTest {
         }
 
         @Override
+        public void onConnected(Socket socket) {
+
+        }
+
+        @Override
         public void onPreClosed() {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
         }
@@ -48,39 +63,39 @@ public class NetworkServerTest {
         }
     }
 
-    public static class TestServerConnectionHandler extends ConnectionHandler {
+    public static class TestServerConnectionHandler extends BaseConnectionHandler {
 
         @Override
-        public void onPacketReceive(Client client, String data) {
+        public void onPacketReceive(BaseClient client, String data) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
             logger.info("data="+data.toString());
         }
 
         @Override
-        public void onDisconnected(Client client) {
+        public void onDisconnected(BaseClient client) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
         }
 
         @Override
-        public void onPreDisconnected(Client client) {
+        public void onPreDisconnected(BaseClient client) {
 
         }
 
         @Override
-        public void onConnected(Client client) {
+        public void onConnected(BaseClient client) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.info("client="+client.toString());
         }
 
         @Override
-        public void onPreConnected(Client client) {
+        public void onPreConnected(BaseClient client) {
 
         }
 
         @Override
-        public void onException(Client client, Exception throwable) {
+        public void onException(BaseClient client, Exception throwable) {
             LoggerTest.TestLogger logger = new LoggerTest.TestLogger();
             logger.error(throwable);
         }
